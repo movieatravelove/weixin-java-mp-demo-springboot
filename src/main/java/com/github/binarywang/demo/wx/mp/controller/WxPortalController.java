@@ -84,7 +84,6 @@ public class WxPortalController {
             if (outMessage == null) {
                 return "";
             }
-
             out = outMessage.toXml();
         } else if ("aes".equalsIgnoreCase(encType)) {
             // aes加密的消息
@@ -95,10 +94,8 @@ public class WxPortalController {
             if (outMessage == null) {
                 return "";
             }
-
             out = outMessage.toEncryptedXml(wxService.getWxMpConfigStorage());
         }
-
         log.debug("\n组装回复信息：{}", out);
         return out;
     }

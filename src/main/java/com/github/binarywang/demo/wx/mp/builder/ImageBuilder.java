@@ -11,10 +11,10 @@ import me.chanjar.weixin.mp.bean.message.WxMpXmlOutMessage;
 public class ImageBuilder extends AbstractBuilder {
 
     @Override
-    public WxMpXmlOutMessage build(String content, WxMpXmlMessage wxMessage,
+    public WxMpXmlOutMessage build(Object content, WxMpXmlMessage wxMessage,
                                    WxMpService service) {
 
-        WxMpXmlOutImageMessage m = WxMpXmlOutMessage.IMAGE().mediaId(content)
+        WxMpXmlOutImageMessage m = WxMpXmlOutMessage.IMAGE().mediaId(String.valueOf(content))
             .fromUser(wxMessage.getToUser()).toUser(wxMessage.getFromUser())
             .build();
 

@@ -2,6 +2,8 @@ package com.github.binarywang.demo.wx.mp.handler;
 
 import java.util.Map;
 
+import com.github.binarywang.demo.wx.mp.builder.TextBuilder;
+import me.chanjar.weixin.common.api.WxConsts;
 import org.springframework.stereotype.Component;
 
 import me.chanjar.weixin.common.error.WxErrorException;
@@ -18,8 +20,12 @@ public class ScanHandler extends AbstractHandler {
 
     @Override
     public WxMpXmlOutMessage handle(WxMpXmlMessage wxMpXmlMessage, Map<String, Object> map,
-                                    WxMpService wxMpService, WxSessionManager wxSessionManager) throws WxErrorException {
+                                    WxMpService wxMpService, WxSessionManager wxSessionManager) {
         // 扫码事件处理
+        if (wxMpXmlMessage.getEvent().equals(WxConsts.EventType.SCAN)) {
+            logger.info("+++++++++++++++扫码事件++++++++++++++++");
+            return new TextBuilder().build("扫码消息："+wxMpXmlMessage.getEventKey(), wxMpXmlMessage, wxMpService);
+        }
         return null;
     }
 }
