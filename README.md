@@ -1,39 +1,6 @@
-[![码云Gitee](https://gitee.com/binary/weixin-java-mp-demo-springboot/badge/star.svg?theme=blue)](https://gitee.com/binary/weixin-java-mp-demo-springboot)
-[![Github](http://github-svg-buttons.herokuapp.com/star.svg?user=binarywang&repo=weixin-java-mp-demo-springboot&style=flat&background=1081C1)](https://github.com/binarywang/weixin-java-mp-demo-springboot)
-[![Build Status](https://travis-ci.org/binarywang/weixin-java-mp-demo-springboot.svg?branch=master)](https://travis-ci.org/binarywang/weixin-java-mp-demo-springboot)
------------------------
-
 ### 本Demo基于Spring Boot构建，实现微信公众号后端开发功能。
 ### 本项目为WxJava的Demo演示程序，更多Demo请[查阅此处](https://github.com/Wechat-Group/WxJava/blob/master/demo.md)。
-#### 如有问题请[【在此提问】](https://github.com/binarywang/weixin-java-mp-demo-springboot/issues)，谢谢配合。
 
-
-<table border="0">
-	<tbody>
-		<tr>
-			<td align="left" valign="middle">
-        <a href="http://mp.weixin.qq.com/mp/homepage?__biz=MzI3MzAwMzk4OA==&hid=1&sn=f31af3bf562b116b061c9ab4edf70b61&scene=18#wechat_redirect" target="_blank">
-				  <img height="120" src="https://gitee.com/binary/weixin-java-tools/raw/master/images/qrcodes/mp.png">
-        </a>
-			</td>
-			<td align="center" valign="middle">
-				<a href="https://cloud.tencent.com/redirect.php?redirect=1014&cps_key=a4c06ffe004dbcda44036daa1bf8f876&from=console" target="_blank">
-					<img height="120" src="https://gitee.com/binary/weixin-java-tools/raw/master/images/banners/tcloud.jpg">
-				</a>
-			</td>
-			<td align="center" valign="middle">
-				<a href="https://www.vultr.com/?ref=7888900-4F" target="_blank">
-					<img height="120" src="https://gitee.com/binary/weixin-java-tools/raw/master/images/banners/vultr.jpg">
-				</a>
-			</td>
-			<td align="center" valign="middle">
-				<a href="https://promotion.aliyun.com/ntms/act/qwbk.html?userCode=7makzf5h" target="_blank">
-					<img height="120" src="https://gitee.com/binary/weixin-java-tools/raw/master/images/banners/aliyun.jpg">
-				</a>
-			</td>
-		</tr>
-	</tbody>
-</table>
 
 ## 使用步骤：
 1. 请注意，本demo为简化代码编译时加入了lombok支持，如果不了解lombok的话，请先学习下相关知识，比如可以阅读[此文章](https://mp.weixin.qq.com/s/cUc-bUcprycADfNepnSwZQ)；
@@ -56,9 +23,43 @@ wx:
         secret: 1111
         token: 111
         aesKey: 111
-
 ```
 3. 运行Java程序：`WxMpDemoApplication`；
 4. 配置微信公众号中的接口地址：http://公网可访问域名/wx/portal/xxxxx （注意，xxxxx为对应公众号的appid值）；
 5. 根据自己需要修改各个handler的实现，加入自己的业务逻辑。
-	
+
+
+## 流程
+
+授权登录：
+
+1. 构造网页授权url（WxMenuController -> 创建自定义菜单是跳转授权URL）
+   首先构造网页授权url，然后构成超链接让用户点击
+   ```
+   https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE&state=STATE#wechat_redirect
+   ```
+   
+2. 获得access token（WxRedirectController -> greetUser()）
+   当用户同意授权后，会回调所设置的url并把authorization code传过来，然后用这个code获得access token，
+   其中也包含用户的openid等信息
+   
+3. 获得用户基本信息（WxRedirectController -> greetUser()）
+
+
+创建自定义菜单：
+
+WxMenuController -> menuCreateSample() 设置菜单。
+
+
+## 说明	
+
+错误代码：
+个人公众号暂时不支持认证，对应的接口权限也较少，比如不能创建自定义菜单、不能自动回复等。
+个人测试开发可以申请测试号，可使用所有功能；企业账号需要认证。
+微信公众平台测试号申请：
+https://mp.weixin.qq.com/debug/cgi-bin/sandboxinfo?action=showinfo&t=sandbox/index
+
+授权登录：
+提示：redirect_uri 参数错误
+容易产生误区，一直检查redirect_uri参数，很容易忽略一点就是微信后台的配置，
+修改[网页授权获取用户基本信息]的回调域名，保持与redirect_uri参数的域名一直，并去掉http://。
